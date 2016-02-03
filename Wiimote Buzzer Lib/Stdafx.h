@@ -4,4 +4,8 @@
 
 #pragma once
 
+#include <Windows.h>
+#include <hidsdi.h>
+#include <SetupAPI.h>
 
+#include <vector>
