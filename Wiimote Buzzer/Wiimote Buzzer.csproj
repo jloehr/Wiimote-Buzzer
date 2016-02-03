@@ -95,6 +95,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Wiimote Buzzer Lib\Wiimote Buzzer Lib.vcxproj">
+      <Project>{eba4a9d4-070c-44e6-bb53-cc7d32171be1}</Project>
+      <Name>Wiimote Buzzer Lib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
