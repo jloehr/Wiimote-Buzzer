@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Media;
 using WiimoteBuzzerLib;
 
@@ -13,6 +15,7 @@ namespace Wiimote_Buzzer
     {
         private string _GroupName;
         private Color _Color;
+        private int _BuzzedNumber;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -22,6 +25,8 @@ namespace Wiimote_Buzzer
             this.Color = Color;
             this.Index = Index;
             this.Wiimote = Wiimote;
+            this.BuzzedNumber = 0;
+
         }
 
         public int Index { get; private set; }
@@ -47,6 +52,22 @@ namespace Wiimote_Buzzer
             }
         }
 
+        public int BuzzedNumber
+        {
+            get { return _BuzzedNumber; }
+            set
+            {
+                _BuzzedNumber = value;
+                OnPropertyChanged("BuzzedNumber");
+                OnPropertyChanged("BuzzedNumberDisplay");
+            }
+        }
+
+        public string BuzzedNumberDisplay
+        {
+            get { return (BuzzedNumber == 0) ? "" : BuzzedNumber.ToString(); }
+        }
+
         protected void OnPropertyChanged(string PropertyName)
         {
             PropertyChangedEventHandler Handler = PropertyChanged;
@@ -60,5 +81,11 @@ namespace Wiimote_Buzzer
         {
             return (this.Index - other.Index);
         }
+
+        public void Reset()
+        {
+            this.BuzzedNumber = 0;
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,52 @@ namespace Wiimote_Buzzer
         public BuzzerTemplate()
         {
             InitializeComponent();
+        }
+
+        private void GroupName_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            GroupName.Visibility = Visibility.Hidden;
+            GroupNameEditor.Visibility = Visibility.Visible;
+            e.Handled = true;
+        }
+
+        private void GroupNameEditor_KeyDown(object sender, KeyEventArgs e)
+        {
+            /*if(e.Key == Key.Enter)
+            {
+                GroupNameEditor.Visibility = Visibility.Hidden;
+                GroupName.Visibility = Visibility.Visible;
+            }
+            */
+        }
+
+        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            GroupNameEditor.Visibility = Visibility.Hidden;
+            GroupName.Visibility = Visibility.Visible;
+
+        }
+    }
+
+    public class ColorConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            Color OldColor = (Color)values[0];
+            int Number = System.Convert.ToInt32(values[1]);
+            Number = (Number == 0) ? 5 : Number;
+
+            float ColorStates = 6f;
+            float ColorMulti = (ColorStates - (float)Number) / ColorStates;
+
+            OldColor.ScA = ColorMulti;
+
+            return OldColor;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

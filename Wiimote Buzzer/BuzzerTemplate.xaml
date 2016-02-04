@@ -5,12 +5,33 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Wiimote_Buzzer"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <Grid.Background>
-            <SolidColorBrush Color="{Binding Color}"/>
-        </Grid.Background>
-        <TextBlock x:Name="textBlock" Margin="0" TextWrapping="Wrap" Text="{Binding GroupName}"/>
-
+             d:DesignHeight="1000" d:DesignWidth="500
+             ">
+    <UserControl.Resources>
+        <local:ColorConverter x:Key="ColorConverter" />
+        <SolidColorBrush x:Key="BorderColor" Color="{Binding Color}"/>
+    </UserControl.Resources>
+    <Grid Margin="20"  MouseDown="Grid_MouseDown">
+        <Border BorderThickness="5" CornerRadius="10" BorderBrush="{DynamicResource BorderColor}">
+            <Border.Background>
+                <SolidColorBrush>
+                    <SolidColorBrush.Color>
+                        <MultiBinding Converter="{StaticResource ColorConverter}" >
+                            <Binding Path="Color"/>
+                            <Binding Path="BuzzedNumber"/>
+                        </MultiBinding >
+                    </SolidColorBrush.Color>
+                </SolidColorBrush>
+            </Border.Background>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="3*" />
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="BuzzedNumber" Margin="0" TextWrapping="Wrap" Text="{Binding BuzzedNumberDisplay}" HorizontalAlignment="Center" FontSize="128" FontWeight="Bold" VerticalAlignment="Center" Grid.Row="0" TextAlignment="Center"/>
+                <TextBlock x:Name="GroupName" Margin="0" TextWrapping="Wrap" Text="{Binding GroupName}" FontSize="48" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" TextAlignment="Center" MouseDown="GroupName_MouseDown"/>
+                <TextBox x:Name="GroupNameEditor"  Margin="0" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding GroupName}" FontSize="48" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" TextAlignment="Center" Visibility="Hidden" KeyDown="GroupNameEditor_KeyDown" />
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -17,6 +18,8 @@ namespace Wiimote_Buzzer
         List<int> AvailableIndices = new List<int> { 0, 1, 2, 3 };
         List<Color> BuzzerColors = new List<Color> { Colors.Orange, Colors.Green, Colors.Purple, Colors.Blue };
 
+        List<Buzzer> BuzzedList = new List<Buzzer>();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -27,12 +30,24 @@ namespace Wiimote_Buzzer
             WiimoteHub.StartScanning();
 
             BuzzerPanel.ItemsSource = Buzzer;
+
+
+            int WiimoteIndex = AvailableIndices[0];
+            AvailableIndices.RemoveAt(0);
+            Buzzer.Add(new Buzzer("Team " + (WiimoteIndex + 1), BuzzerColors[WiimoteIndex], WiimoteIndex, null));
+            Buzzer.Sort();
+            BuzzerPanel.Items.Refresh();
         }
 
         private void WindowsClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             WiimoteHub.StopScanning();
             WiimoteHub.DisconnectWiimotes();
+        }
+
+        private void RumbleWiimote(Wiimote Wiimote)
+        {
+            Task.Factory.StartNew(() => { Wiimote.RumbleBriefly(); });
         }
 
         private void OnNewWiimoteFound(object sender, Wiimote e)
@@ -72,7 +87,7 @@ namespace Wiimote_Buzzer
             }
 
             NewWiimote.SetLED(LED);
-            Task.Factory.StartNew(() => { NewWiimote.RumbleBriefly(); });
+            //RumbleWiimote(NewWiimote);
 
             Buzzer.Add(new Buzzer("Team " + (WiimoteIndex + 1), BuzzerColors[WiimoteIndex], WiimoteIndex, NewWiimote));
             Buzzer.Sort();
@@ -81,8 +96,50 @@ namespace Wiimote_Buzzer
         
         private void OnButtonPressed(object sender, System.EventArgs e)
         {
-            Wiimote Wiimote = sender as Wiimote;
-            Wiimote.RumbleBriefly();
+            Application.Current.Dispatcher.Invoke(new Action(() => { Buzz(sender as Wiimote); }));
+        }
+
+        private void Buzz(Wiimote BuzzedWiimote)
+        {
+            Buzzer Buzzed = GetBuzzer(BuzzedWiimote);
+
+            if(Buzzed == null)
+            {
+                return;
+            }
+
+            if(BuzzedList.Contains(Buzzed))
+            {
+                return;
+            }
+
+            if(BuzzedList.Count == 0)
+            {
+                // First one
+                RumbleWiimote(BuzzedWiimote);
+
+                // Start Reset Timer
+                Task.Factory.StartNew(new Action(() => { BuzzedResetTimer(); }));
+            }
+
+            BuzzedList.Add(Buzzed);
+            Buzzed.BuzzedNumber = BuzzedList.Count;
+        }
+
+        private void BuzzedResetTimer()
+        {
+            Thread.Sleep(5000);
+            Application.Current.Dispatcher.Invoke(new Action(() => { ResetBuzzed(); }));
+        }
+
+        private void ResetBuzzed()
+        {
+            foreach(Buzzer Buzzed in BuzzedList)
+            {
+                Buzzed.Reset();
+            }
+
+            BuzzedList.Clear();
         }
 
         private void OnWiimoteDisconnected(object sender, System.EventArgs e)
@@ -92,16 +149,7 @@ namespace Wiimote_Buzzer
 
         private void RemoveWiimote(Wiimote DisconnectedWiimote)
         {
-            Buzzer BuzzerToRemove = null;
-
-            foreach(Buzzer Tmp in Buzzer)
-            {
-                if(Tmp.Wiimote == DisconnectedWiimote)
-                {
-                    BuzzerToRemove = Tmp;
-                    break;
-                }
-            }
+            Buzzer BuzzerToRemove = GetBuzzer(DisconnectedWiimote);
 
             if(BuzzerToRemove == null)
             {
@@ -113,6 +161,19 @@ namespace Wiimote_Buzzer
 
             AvailableIndices.Add(BuzzerToRemove.Index);
             AvailableIndices.Sort();
+        }
+
+        private Buzzer GetBuzzer(Wiimote Wiimote)
+        {
+            foreach (Buzzer Tmp in Buzzer)
+            {
+                if (Tmp.Wiimote == Wiimote)
+                {
+                    return Tmp;
+                }
+            }
+
+            return null;
         }
     }
 }
