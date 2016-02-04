@@ -39,6 +39,8 @@ namespace WiimoteBuzzerLib {
 
 		void FreeResources();
 
+		void SetReportMode();
+
 		void Send(DataBuffer & Buffer);
 		void SendFallback(DataBuffer & Buffer);
 	};

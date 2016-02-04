@@ -19,8 +19,7 @@ void WiimoteBuzzerLib::Wiimote::StartContinousReader()
 		return;
 	}
 
-	DataBuffer Buffer({ 0x12, 0x00, 0x30 });
-	Send(Buffer);
+	SetReportMode();
 
 	Abort = false;
 
@@ -90,6 +89,12 @@ void WiimoteBuzzerLib::Wiimote::RumbleBriefly()
 	System::Threading::Thread::Sleep(200);
 
 	Buffer[1] = 0x00;
+	Send(Buffer);
+}
+
+void WiimoteBuzzerLib::Wiimote::SetReportMode()
+{
+	DataBuffer Buffer({ 0x12, 0x00, 0x30 });
 	Send(Buffer);
 }
 
