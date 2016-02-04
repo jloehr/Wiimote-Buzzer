@@ -27,7 +27,6 @@ private:
 
 	GUID HidGuid;
 	HDEVINFO DeviceInfoSet;
-	DWORD DeviceIndex;
 
 	void CheckEnumeratedDeviceInterface(PSP_DEVICE_INTERFACE_DATA DeviceInterfaceData);
 	HANDLE CheckDevice(LPCTSTR DevicePath);

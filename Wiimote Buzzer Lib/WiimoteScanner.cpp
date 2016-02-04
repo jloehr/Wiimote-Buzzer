@@ -3,7 +3,7 @@
 
 
 WiimoteScanner::WiimoteScanner(DeviceInstanceIdSet & WiimotesInUse)
-	:WiimotesInUse(WiimotesInUse), DeviceIndex(0), DeviceInfoSet(NULL)
+	:WiimotesInUse(WiimotesInUse), DeviceInfoSet(NULL)
 {
 	HidD_GetHidGuid(&HidGuid);
 }
@@ -17,6 +17,8 @@ WiimoteScanner::WiimoteDataVector WiimoteScanner::ScanForWiimotes()
 	}
 	
 	NewWiimotes.clear();
+
+	DWORD DeviceIndex = 0;
 
 	SP_DEVICE_INTERFACE_DATA DeviceInterfaceData = {};
 	DeviceInterfaceData.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
