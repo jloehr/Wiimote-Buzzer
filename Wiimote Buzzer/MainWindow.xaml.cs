@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using WiimoteBuzzerLib;
 
@@ -174,6 +175,29 @@ namespace Wiimote_Buzzer
             }
 
             return null;
+        }
+
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            switch(WindowState)
+            {
+                case WindowState.Maximized:
+                    WindowStyle = WindowStyle.None;
+
+                    break;
+                case WindowState.Normal:
+                    WindowStyle = WindowStyle.SingleBorderWindow;
+                    break;
+            }
+            
+        }
+
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if(e.Key == Key.Escape)
+            {
+                WindowState = WindowState.Normal;
+            }
         }
     }
 }
