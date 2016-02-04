@@ -86,7 +86,7 @@ void WiimoteBuzzerLib::Wiimote::RumbleBriefly()
 	DataBuffer Buffer({ 0x10, 0x01});
 	Send(Buffer);
 
-	System::Threading::Thread::Sleep(200);
+	System::Threading::Thread::Sleep(400);
 
 	Buffer[1] = 0x00;
 	Send(Buffer);
