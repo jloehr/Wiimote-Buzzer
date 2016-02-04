@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Wiimote_Buzzer"
         mc:Ignorable="d"
-        Title="MainWindow" StateChanged="Window_StateChanged" KeyDown="Window_KeyDown">
+        Title="Wiimote Buzzer" StateChanged="Window_StateChanged" KeyDown="Window_KeyDown">
     <Grid>
         <ItemsControl x:Name="BuzzerPanel" Margin="20">
             <ItemsControl.ItemsPanel>
