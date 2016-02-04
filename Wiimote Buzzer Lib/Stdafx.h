@@ -7,5 +7,9 @@
 #include <Windows.h>
 #include <hidsdi.h>
 #include <SetupAPI.h>
+#include <initguid.h>
+#include <Devpkey.h>
+#include <Cfgmgr32.h>
 
+#include <set>
 #include <vector>

@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
+using WiimoteBuzzerLib;
 
 namespace Wiimote_Buzzer
 {
@@ -20,9 +8,26 @@ namespace Wiimote_Buzzer
     /// </summary>
     public partial class MainWindow : Window
     {
+        WiimoteHub WiimoteHub = new WiimoteHub();
+
         public MainWindow()
         {
             InitializeComponent();
+
+            Closing += WindowsClosing;
+
+            WiimoteHub.NewWiimoteFound += OnNewWiimoteFound;
+            WiimoteHub.StartScanning();
+        }
+
+        private void WindowsClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            WiimoteHub.StopScanning();
+        }
+
+        private void OnNewWiimoteFound(object sender, Wiimote e)
+        {
+            MessageBox.Show("New Wiimote Found!");
         }
     }
 }

@@ -17,10 +17,16 @@ namespace WiimoteBuzzerLib {
 		event System::EventHandler<Wiimote^>^ NewWiimoteFound;
 
 	private:
+		DeviceInstanceIdSet * WiimotesInUse;
 		WiimoteScanner * Scanner;
+
 		System::Threading::Thread^ ScannerThread;
 		volatile bool Abort;
 
+		System::Collections::Generic::List<Wiimote^>^ ConnectedWiimotes;
+		Object^ WiimotesLock;
+
 		void ScannerThreadEntry();
+		void OnWiimoteDisconnected(System::Object ^sender, System::EventArgs ^e);
 	};
 }
