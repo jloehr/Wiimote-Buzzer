@@ -63,7 +63,8 @@ void WiimoteBuzzerLib::WiimoteHub::ScannerThreadEntry()
 
 			Wiimote^ NewWiimote = gcnew Wiimote(NewDevice);
 			ConnectedWiimotes->Add(NewWiimote);
-			NewWiimote->WiimoteDisconnected += gcnew System::EventHandler<System::EventArgs ^>(this, &WiimoteBuzzerLib::WiimoteHub::OnWiimoteDisconnected);
+			NewWiimote->WiimoteDisconnected += gcnew System::EventHandler(this, &WiimoteBuzzerLib::WiimoteHub::OnWiimoteDisconnected);
+			NewWiimote->StartContinousReader();
 			
 			NewWiimoteFound(this, NewWiimote);
 		}
@@ -80,7 +81,17 @@ void WiimoteBuzzerLib::WiimoteHub::OnWiimoteDisconnected(System::Object ^sender,
 
 	WiimotesInUse->erase(DisconnectedWiimote->DeviceInstanceId);
 	ConnectedWiimotes->Remove(DisconnectedWiimote);
-	DisconnectedWiimote->WiimoteDisconnected -= gcnew System::EventHandler<System::EventArgs ^>(this, &WiimoteBuzzerLib::WiimoteHub::OnWiimoteDisconnected);
+	DisconnectedWiimote->WiimoteDisconnected -= gcnew System::EventHandler(this, &WiimoteBuzzerLib::WiimoteHub::OnWiimoteDisconnected);
 
 	System::Threading::Monitor::Exit(WiimotesLock);
+}
+
+void WiimoteBuzzerLib::WiimoteHub::DisconnectWiimotes()
+{
+	System::Collections::Generic::List<Wiimote^>^ ConnectedWiimotes = gcnew System::Collections::Generic::List<Wiimote^>(this->ConnectedWiimotes);
+
+	for each(Wiimote^ DisconnectingWiimote in ConnectedWiimotes)
+	{
+		DisconnectingWiimote->Disconnect();
+	}
 }

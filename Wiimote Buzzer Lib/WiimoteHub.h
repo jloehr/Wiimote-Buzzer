@@ -14,6 +14,8 @@ namespace WiimoteBuzzerLib {
 		void StartScanning();
 		void StopScanning();
 
+		void DisconnectWiimotes();
+
 		event System::EventHandler<Wiimote^>^ NewWiimoteFound;
 
 	private:
