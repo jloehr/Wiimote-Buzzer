@@ -47,6 +47,7 @@ namespace Wiimote_Buzzer
         {
             Color OldColor = (Color)values[0];
             int Number = System.Convert.ToInt32(values[1]);
+            
             Number = (Number == 0) ? 5 : Number;
 
             float ColorStates = 6f;

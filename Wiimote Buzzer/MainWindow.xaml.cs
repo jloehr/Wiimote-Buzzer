@@ -31,13 +31,6 @@ namespace Wiimote_Buzzer
             WiimoteHub.StartScanning();
 
             BuzzerPanel.ItemsSource = Buzzer;
-
-
-            int WiimoteIndex = AvailableIndices[0];
-            AvailableIndices.RemoveAt(0);
-            Buzzer.Add(new Buzzer("Team " + (WiimoteIndex + 1), BuzzerColors[WiimoteIndex], WiimoteIndex, null));
-            Buzzer.Sort();
-            BuzzerPanel.Items.Refresh();
         }
 
         private void WindowsClosing(object sender, System.ComponentModel.CancelEventArgs e)
