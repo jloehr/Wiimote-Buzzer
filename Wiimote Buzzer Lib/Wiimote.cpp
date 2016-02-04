@@ -136,7 +136,21 @@ void WiimoteBuzzerLib::Wiimote::ContinousReader()
 			}
 		}
 
-		// Check for Input
+		CheckInput(Buffer);
+	}
+}
+
+void WiimoteBuzzerLib::Wiimote::CheckInput(const InputReport & Input)
+{
+	if (Input[0] == 0x20)
+	{
+		SetReportMode();
+		return;
+	}
+
+	if (Input[2] & 0x0C)
+	{
+		ButtonPressed(this, nullptr);
 	}
 }
 

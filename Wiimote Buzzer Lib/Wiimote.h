@@ -38,6 +38,8 @@ namespace WiimoteBuzzerLib {
 		void ContinousReader();
 		void StopContinousReader();
 
+		void CheckInput(const InputReport & Input);
+
 		void FreeResources();
 
 		void SetReportMode();

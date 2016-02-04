@@ -28,13 +28,20 @@ namespace Wiimote_Buzzer
 
         private void OnNewWiimoteFound(object sender, Wiimote e)
         {
-            MessageBox.Show("New Wiimote Found!");
             e.WiimoteDisconnected += OnWiimoteDisconnected;
+            e.ButtonPressed += OnButtonPressed;
+            e.SetLED(Wiimote.WiimoteLED.LED1);
+            e.RumbleBriefly();
+        }
+
+        private void OnButtonPressed(object sender, System.EventArgs e)
+        {
+            Wiimote Wiimote = sender as Wiimote;
+            Wiimote.RumbleBriefly();
         }
 
         private void OnWiimoteDisconnected(object sender, System.EventArgs e)
         {
-            MessageBox.Show("Wiimote Disconnected");
         }
     }
 }
