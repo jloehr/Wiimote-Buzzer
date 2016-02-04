@@ -50,9 +50,9 @@ namespace Wiimote_Buzzer
             Number = (Number == 0) ? 5 : Number;
 
             float ColorStates = 6f;
-            float ColorMulti = (ColorStates - (float)Number) / ColorStates;
+            float Gradient = (ColorStates - (float)Number) / ColorStates;
 
-            OldColor.ScA = ColorMulti;
+            OldColor.ScA = Gradient;
 
             return OldColor;
         }
