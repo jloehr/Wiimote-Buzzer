@@ -2,7 +2,7 @@
 #include "Wiimote.h"
 
 WiimoteBuzzerLib::Wiimote::Wiimote(const WiimoteScanner::WiimoteData & DeviceData)
-	:DeviceHandle(DeviceData.DeviceHandle), ReadIo(nullptr)
+	:DeviceHandle(DeviceData.DeviceHandle), ReadIo(nullptr), UseOutputReportSize(DeviceData.UsesToshibaStack)
 {
 	this->DeviceInstanceId = DeviceData.DeviceInstanceId;
 }
@@ -19,8 +19,8 @@ void WiimoteBuzzerLib::Wiimote::StartContinousReader()
 		return;
 	}
 
-	//DataBuffer Buffer({ 0x12, 0x00, 0x30 });
-	//Send(Buffer);
+	DataBuffer Buffer({ 0x12, 0x00, 0x30 });
+	Send(Buffer);
 
 	Abort = false;
 
@@ -38,14 +38,17 @@ void WiimoteBuzzerLib::Wiimote::Disconnect()
 {
 	StopContinousReader();
 
+	WiimoteDisconnected(this, nullptr);
+
 	FreeResources();
 }
 
 void WiimoteBuzzerLib::Wiimote::StopContinousReader()
 {
-	if ((ReadThread != nullptr) && (ReadThread->IsAlive))
+	Abort = true;
+
+	if ((ReadThread != nullptr) && (System::Threading::Thread::CurrentThread != ReadThread) && (ReadThread->IsAlive))
 	{
-		Abort = true;
 		do {
 			SetEvent(ReadIo->hEvent);
 		} while (!ReadThread->Join(100));
@@ -70,13 +73,29 @@ void WiimoteBuzzerLib::Wiimote::FreeResources()
 	DeviceHandle = INVALID_HANDLE_VALUE;
 
 	ReadThread = nullptr;
+}
 
-	WiimoteDisconnected(this, nullptr);
+void WiimoteBuzzerLib::Wiimote::SetLED(WiimoteLED LED)
+{
+	DataBuffer Buffer({ 0x11, (UCHAR)LED});
+
+	Send(Buffer);
+}
+
+void WiimoteBuzzerLib::Wiimote::RumbleBriefly()
+{
+	DataBuffer Buffer({ 0x10, 0x01});
+	Send(Buffer);
+
+	System::Threading::Thread::Sleep(200);
+
+	Buffer[1] = 0x00;
+	Send(Buffer);
 }
 
 void WiimoteBuzzerLib::Wiimote::ContinousReader()
 {
-	UCHAR Buffer[22];
+	UCHAR Buffer[WiimoteReportSize];
 	DWORD BytesRead;
 
 	while (!Abort)
@@ -92,7 +111,7 @@ void WiimoteBuzzerLib::Wiimote::ContinousReader()
 			if (Error != ERROR_IO_PENDING)
 			{
 				// Error
-				FreeResources();
+				Disconnect();
 				break;
 			}
 			else
@@ -100,7 +119,7 @@ void WiimoteBuzzerLib::Wiimote::ContinousReader()
 				if (!GetOverlappedResult(DeviceHandle, ReadIo, &BytesRead, TRUE))
 				{
 					// Error
-					FreeResources();
+					Disconnect();
 					break;
 				}
 
@@ -116,3 +135,46 @@ void WiimoteBuzzerLib::Wiimote::ContinousReader()
 	}
 }
 
+void WiimoteBuzzerLib::Wiimote::Send(DataBuffer & Buffer)
+{
+	if (DeviceHandle == INVALID_HANDLE_VALUE)
+	{
+		return;
+	}
+
+	DWORD BytesWritten;
+	OVERLAPPED Overlapped = {};
+
+	if ((UseOutputReportSize) && (Buffer.size() < WiimoteReportSize))
+	{
+		Buffer.resize(WiimoteReportSize, 0);
+	}
+
+	BOOL Result = WriteFile(DeviceHandle, Buffer.data(), (DWORD)Buffer.size(), &BytesWritten, &Overlapped);
+	if (!Result)
+	{
+		DWORD Error = GetLastError();
+
+		if (Error == ERROR_INVALID_USER_BUFFER)
+		{
+			SendFallback(Buffer);
+		}
+
+		if (Error != ERROR_IO_PENDING)
+		{
+			// Error
+			return;
+		}
+	}
+
+	if (!GetOverlappedResult(DeviceHandle, &Overlapped, &BytesWritten, TRUE))
+	{
+		// Error
+		return;
+	}
+}
+
+void WiimoteBuzzerLib::Wiimote::SendFallback(DataBuffer & Buffer)
+{
+	HidD_SetOutputReport(DeviceHandle, Buffer.data(), (ULONG)Buffer.size());
+}
