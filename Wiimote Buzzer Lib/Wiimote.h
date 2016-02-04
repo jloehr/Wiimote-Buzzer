@@ -26,6 +26,7 @@ namespace WiimoteBuzzerLib {
 		event System::EventHandler^ WiimoteDisconnected;
 	private:
 		static const int WiimoteReportSize = 22;
+		typedef std::array<UCHAR, WiimoteReportSize> InputReport;
 
 		System::Threading::Thread^ ReadThread;
 		volatile bool Abort;

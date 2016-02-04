@@ -100,16 +100,16 @@ void WiimoteBuzzerLib::Wiimote::SetReportMode()
 
 void WiimoteBuzzerLib::Wiimote::ContinousReader()
 {
-	UCHAR Buffer[WiimoteReportSize];
+	InputReport Buffer = {};
 	DWORD BytesRead;
 
 	while (!Abort)
 	{
-		ZeroMemory(Buffer, sizeof(Buffer));
+		Buffer.fill(0);
 		ResetEvent(ReadIo->hEvent);
 		BytesRead = 0;
 
-		BOOL Result = ReadFile(DeviceHandle, &Buffer, sizeof(Buffer), &BytesRead, ReadIo);
+		BOOL Result = ReadFile(DeviceHandle, Buffer.data(), (DWORD)Buffer.size(), &BytesRead, ReadIo);
 		if (!Result)
 		{
 			DWORD Error = GetLastError();
