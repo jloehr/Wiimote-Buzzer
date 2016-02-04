@@ -17,7 +17,7 @@ namespace Wiimote_Buzzer
         WiimoteHub WiimoteHub = new WiimoteHub();
         List<Buzzer> Buzzer = new List<Buzzer>();
         List<int> AvailableIndices = new List<int> { 0, 1, 2, 3 };
-        List<Color> BuzzerColors = new List<Color> { Colors.Orange, Colors.Green, Colors.Purple, Colors.Blue };
+        List<Color> BuzzerColors = new List<Color> { Colors.Orange, Colors.Green, Colors.Purple, Colors.RoyalBlue };
 
         List<Buzzer> BuzzedList = new List<Buzzer>();
 
