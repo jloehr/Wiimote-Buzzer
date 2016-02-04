@@ -33,16 +33,6 @@ namespace Wiimote_Buzzer
             e.Handled = true;
         }
 
-        private void GroupNameEditor_KeyDown(object sender, KeyEventArgs e)
-        {
-            /*if(e.Key == Key.Enter)
-            {
-                GroupNameEditor.Visibility = Visibility.Hidden;
-                GroupName.Visibility = Visibility.Visible;
-            }
-            */
-        }
-
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
         {
             GroupNameEditor.Visibility = Visibility.Hidden;

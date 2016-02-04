@@ -30,7 +30,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock x:Name="BuzzedNumber" Margin="0" TextWrapping="Wrap" Text="{Binding BuzzedNumberDisplay}" HorizontalAlignment="Center" FontSize="128" FontWeight="Bold" VerticalAlignment="Center" Grid.Row="0" TextAlignment="Center"/>
                 <TextBlock x:Name="GroupName" Margin="0" TextWrapping="Wrap" Text="{Binding GroupName}" FontSize="48" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" TextAlignment="Center" MouseDown="GroupName_MouseDown"/>
-                <TextBox x:Name="GroupNameEditor"  Margin="0" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding GroupName}" FontSize="48" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" TextAlignment="Center" Visibility="Hidden" KeyDown="GroupNameEditor_KeyDown" />
+                <TextBox x:Name="GroupNameEditor"  Margin="0" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding GroupName}" FontSize="48" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" TextAlignment="Center" Visibility="Hidden" />
             </Grid>
         </Border>
     </Grid>
