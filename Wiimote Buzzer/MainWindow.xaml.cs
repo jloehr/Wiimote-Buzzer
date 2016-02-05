@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,7 +13,7 @@ namespace Wiimote_Buzzer
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         WiimoteHub WiimoteHub = new WiimoteHub();
         List<Buzzer> Buzzer = new List<Buzzer>();
@@ -20,6 +21,12 @@ namespace Wiimote_Buzzer
         List<Color> BuzzerColors = new List<Color> { Colors.Orange, Colors.Green, Colors.Purple, Colors.RoyalBlue };
 
         List<Buzzer> BuzzedList = new List<Buzzer>();
+
+        private bool _PointsDisplayEnabled;
+        private bool _TimedBuzzerReset;
+        private Task BuzzerResetTask;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public MainWindow()
         {
@@ -31,8 +38,14 @@ namespace Wiimote_Buzzer
             WiimoteHub.StartScanning();
 
             BuzzerPanel.ItemsSource = Buzzer;
-        }
 
+            AddDummyBuzzer();
+            AddDummyBuzzer();
+
+            PointsDisplayEnabled = true;
+            TimedBuzzerReset = false;
+        }
+        
         private void WindowsClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             WiimoteHub.StopScanning();
@@ -47,6 +60,21 @@ namespace Wiimote_Buzzer
         private void OnNewWiimoteFound(object sender, Wiimote e)
         {
             Application.Current.Dispatcher.Invoke(new Action(() => { AddNewWiimote(e); }));       
+        }
+
+        private void AddDummyBuzzer()
+        {
+            if (AvailableIndices.Count == 0)
+            {
+                return;
+            }
+
+            int WiimoteIndex = AvailableIndices[0];
+            AvailableIndices.RemoveAt(0);
+
+            Buzzer.Add(new Buzzer("Team " + (WiimoteIndex + 1), BuzzerColors[WiimoteIndex], WiimoteIndex, null));
+            Buzzer.Sort();
+            BuzzerPanel.Items.Refresh();
         }
 
         private void AddNewWiimote(Wiimote NewWiimote)
@@ -113,7 +141,10 @@ namespace Wiimote_Buzzer
                 RumbleWiimote(BuzzedWiimote);
 
                 // Start Reset Timer
-                Task.Factory.StartNew(new Action(() => { BuzzedResetTimer(); }));
+                if(TimedBuzzerReset)
+                {
+                    BuzzerResetTask = Task.Factory.StartNew(new Action(() => { BuzzedResetTimer(); }));
+                }
             }
 
             BuzzedList.Add(Buzzed);
@@ -123,7 +154,10 @@ namespace Wiimote_Buzzer
         private void BuzzedResetTimer()
         {
             Thread.Sleep(5000);
-            Application.Current.Dispatcher.Invoke(new Action(() => { ResetBuzzed(); }));
+            if ((BuzzerResetTask != null) && (BuzzerResetTask.Id == Task.CurrentId))
+            {
+                Application.Current.Dispatcher.Invoke(new Action(() => { ResetBuzzed(); }));
+            }
         }
 
         private void ResetBuzzed()
@@ -134,6 +168,7 @@ namespace Wiimote_Buzzer
             }
 
             BuzzedList.Clear();
+            BuzzerResetTask = null;
         }
 
         private void OnWiimoteDisconnected(object sender, System.EventArgs e)
@@ -169,6 +204,35 @@ namespace Wiimote_Buzzer
 
             return null;
         }
+        
+        public bool TimedBuzzerReset
+        {
+            get { return _TimedBuzzerReset; }
+            set
+            {
+                _TimedBuzzerReset = value;
+                OnPropertyChanged("TimedBuzzerReset");
+            }
+        }
+
+        public bool PointsDisplayEnabled
+        {
+            get { return _PointsDisplayEnabled; }
+            set
+            {
+                _PointsDisplayEnabled = value;
+                OnPropertyChanged("PointsDisplayEnabled");
+            }
+        }
+
+        protected void OnPropertyChanged(string PropertyName)
+        {
+            PropertyChangedEventHandler Handler = PropertyChanged;
+            if (Handler != null)
+            {
+                Handler(this, new PropertyChangedEventArgs(PropertyName));
+            }
+        }
 
         private void Window_StateChanged(object sender, EventArgs e)
         {
@@ -187,10 +251,30 @@ namespace Wiimote_Buzzer
 
         private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if(e.Key == Key.Escape)
+            switch(e.Key)
             {
-                WindowState = WindowState.Normal;
+                case Key.Escape:
+                    WindowState = WindowState.Normal;
+                    break;
+                case Key.Space:
+                    ResetBuzzed();
+                    break;
             }
+        }
+
+        private void TimedBuzzerResetClick(object sender, RoutedEventArgs e)
+        {
+            TimedBuzzerReset = !TimedBuzzerReset;
+
+            if(!TimedBuzzerReset)
+            {
+                BuzzerResetTask = null;
+            }
+        }
+
+        private void PointsDisplayEnabledClick(object sender, RoutedEventArgs e)
+        {
+            PointsDisplayEnabled = !PointsDisplayEnabled;
         }
     }
 }

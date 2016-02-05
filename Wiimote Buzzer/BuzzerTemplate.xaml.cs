@@ -54,6 +54,7 @@ namespace Wiimote_Buzzer
             GroupName.Visibility = Visibility.Visible;
 
         }
+
         protected void OnPropertyChanged(string PropertyName)
         {
             PropertyChangedEventHandler Handler = PropertyChanged;
