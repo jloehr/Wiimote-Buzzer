@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -19,11 +20,25 @@ namespace Wiimote_Buzzer
     /// <summary>
     /// Interaction logic for BuzzerTemplate.xaml
     /// </summary>
-    public partial class BuzzerTemplate : UserControl
+    public partial class BuzzerTemplate : UserControl, INotifyPropertyChanged
     {
+        private int _Points = 0;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public BuzzerTemplate()
         {
             InitializeComponent();
+        }
+
+        public int Points
+        {
+            get { return _Points; }
+            set
+            {
+                _Points = value;
+                OnPropertyChanged("Points");
+            }
         }
 
         private void GroupName_MouseDown(object sender, MouseButtonEventArgs e)
@@ -38,6 +53,23 @@ namespace Wiimote_Buzzer
             GroupNameEditor.Visibility = Visibility.Hidden;
             GroupName.Visibility = Visibility.Visible;
 
+        }
+        protected void OnPropertyChanged(string PropertyName)
+        {
+            PropertyChangedEventHandler Handler = PropertyChanged;
+            if (Handler != null)
+            {
+                Handler(this, new PropertyChangedEventArgs(PropertyName));
+            }
+        }
+
+        private void MinusClick(object sender, RoutedEventArgs e)
+        {
+            Points = Math.Max(0, Points - 1);
+        }
+        private void PlusClick(object sender, RoutedEventArgs e)
+        {
+            Points++;
         }
     }
 
