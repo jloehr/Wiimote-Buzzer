@@ -8,7 +8,7 @@
              d:DesignHeight="1000" d:DesignWidth="500
              ">
     <UserControl.Resources>
-        <local:ColorConverter x:Key="ColorConverter" />
+        <local:BuzzerColorConverter x:Key="BuzzerColorConverter" />
         <SolidColorBrush x:Key="BorderColor" Color="{Binding Color}"/>
     </UserControl.Resources>
     <Grid Margin="20"  MouseDown="Grid_MouseDown">
@@ -16,7 +16,7 @@
             <Border.Background>
                 <SolidColorBrush>
                     <SolidColorBrush.Color>
-                        <MultiBinding Converter="{StaticResource ColorConverter}" >
+                        <MultiBinding Converter="{StaticResource BuzzerColorConverter}" >
                             <Binding Path="Color"/>
                             <Binding Path="BuzzedNumber"/>
                         </MultiBinding >

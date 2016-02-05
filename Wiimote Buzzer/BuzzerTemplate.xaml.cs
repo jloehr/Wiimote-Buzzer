@@ -41,21 +41,31 @@ namespace Wiimote_Buzzer
         }
     }
 
-    public class ColorConverter : IMultiValueConverter
+    public class BuzzerColorConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            Color OldColor = (Color)values[0];
+            Color Color = (Color)values[0];
             int Number = System.Convert.ToInt32(values[1]);
-            
-            Number = (Number == 0) ? 5 : Number;
 
-            float ColorStates = 6f;
-            float Gradient = (ColorStates - (float)Number) / ColorStates;
+            float Alpha = 1f;
 
-            OldColor.ScA = Gradient;
+            switch(Number)
+            {
+                case 0:
+                    Alpha = 0.2f;
+                    break;
+                case 1:
+                    Alpha = 0.6f;
+                    break;
+                default:
+                    Alpha = 0.4f;
+                    break;
+            }
 
-            return OldColor;
+            Color.ScA = Alpha;
+
+            return Color;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
