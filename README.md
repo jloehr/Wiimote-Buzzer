@@ -1,4 +1,4 @@
-# Wiimote-Buzzer
+# Wiimote Buzzer
 Game Show Buzzer-like App for Wiimotes. 
 Supports up to four Wiimotes.
 
@@ -11,7 +11,14 @@ Just pair your Wiimotes with Windows. The Program is running a continous scanner
 ## Controls
 
 - **A** or **B** Button on Wiimote to buzz.
+- **Space** to reset the buzz.
 - **ESC** to exit fullscreen.
 - Click on team name to edit.
 
-Buzz is reset after 5 seconds.
+If enabled, buzz is reset after 5 seconds.
+
+## Settings
+
+- Toggle the score display
+- Toggle the automatic buzz reset.
+
