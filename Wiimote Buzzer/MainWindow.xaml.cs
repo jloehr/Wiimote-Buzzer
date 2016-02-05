@@ -137,6 +137,8 @@ namespace Wiimote_Buzzer
 
             if(BuzzedList.Count == 0)
             {
+                System.Media.SystemSounds.Beep.Play();
+
                 // First one
                 RumbleWiimote(BuzzedWiimote);
 
