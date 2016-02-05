@@ -109,7 +109,7 @@ namespace Wiimote_Buzzer
             }
 
             NewWiimote.SetLED(LED);
-            //RumbleWiimote(NewWiimote);
+            RumbleWiimote(NewWiimote);
 
             Buzzer.Add(new Buzzer("Team " + (WiimoteIndex + 1), BuzzerColors[WiimoteIndex], WiimoteIndex, NewWiimote));
             Buzzer.Sort();
