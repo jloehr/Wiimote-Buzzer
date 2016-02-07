@@ -8,9 +8,9 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Wiimote Buzzer")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Game Show Buzzer-like Application")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Julian Löhr")]
 [assembly: AssemblyProduct("Wiimote Buzzer")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
