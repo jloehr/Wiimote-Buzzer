@@ -38,10 +38,7 @@ namespace Wiimote_Buzzer
             WiimoteHub.StartScanning();
 
             BuzzerPanel.ItemsSource = Buzzer;
-
-            AddDummyBuzzer();
-            AddDummyBuzzer();
-
+            
             PointsDisplayEnabled = true;
             TimedBuzzerReset = false;
         }
