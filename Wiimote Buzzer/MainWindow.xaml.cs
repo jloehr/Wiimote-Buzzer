@@ -239,10 +239,12 @@ namespace Wiimote_Buzzer
             {
                 case WindowState.Maximized:
                     WindowStyle = WindowStyle.None;
+                    Menu.Visibility = Visibility.Hidden;
 
                     break;
                 case WindowState.Normal:
                     WindowStyle = WindowStyle.SingleBorderWindow;
+                    Menu.Visibility = Visibility.Visible;
                     break;
             }
             
