@@ -6,15 +6,13 @@
         xmlns:local="clr-namespace:Wiimote_Buzzer"
         mc:Ignorable="d"
         Title="Wiimote Buzzer" StateChanged="Window_StateChanged" KeyDown="Window_KeyDown">
-    <Grid>
-        <DockPanel x:Name="Menu">
+    <DockPanel x:Name="Menu">
             <Menu DockPanel.Dock="Top" DataContext="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
                 <MenuItem Header="_Settings">
                     <MenuItem Header="_Timed Buzzer Reset" IsChecked="{Binding TimedBuzzerReset}" Click="TimedBuzzerResetClick" />
                     <MenuItem Header="_Display Points" IsChecked="{Binding PointsDisplayEnabled}" Click="PointsDisplayEnabledClick" />
                 </MenuItem>
-            </Menu>
-        </DockPanel>
+        </Menu>
         <ItemsControl x:Name="BuzzerPanel" Margin="20">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -27,5 +25,5 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-    </Grid>
+    </DockPanel>
 </Window>
